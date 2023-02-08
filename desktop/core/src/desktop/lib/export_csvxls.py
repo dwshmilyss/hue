@@ -35,6 +35,14 @@ from django.utils.encoding import smart_str
 from django.utils.http import urlquote
 from desktop.lib import i18n
 
+import sys
+if (sys.version_info.major == 2):
+  reload(sys)
+  sys.setdefaultencoding('utf8')
+if (sys.version_info.major == 3):
+  import importlib
+  importlib.reload(sys)
+
 if sys.version_info[0] > 2:
   from io import BytesIO as string_io
 else:

@@ -16,6 +16,7 @@
 
 from os.path import dirname, join as joinpath
 from setuptools import setup, Extension
+from io import open
 
 try:
     from subprocess import getoutput
@@ -29,11 +30,14 @@ except ImportError:
 
 project_name = "kerberos"
 
-version_string = "1.3.0"
+version_string = "1.3.1"
 
 description = "Kerberos high-level interface"
 
-long_description = open(joinpath(dirname(__file__), "README.rst")).read()
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+long_description_content_type = "text/markdown"
 
 url = "https://github.com/apple/ccs-pykerberos"
 
@@ -105,12 +109,14 @@ extensions = [
 # Run setup
 #
 
+
 def doSetup():
     setup(
         name=project_name,
         version=version_string,
         description=description,
         long_description=long_description,
+        long_description_content_type=long_description_content_type,
         url=url,
         classifiers=classifiers,
         author=author,

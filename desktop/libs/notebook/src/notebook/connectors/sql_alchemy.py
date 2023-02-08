@@ -197,6 +197,7 @@ class SqlAlchemyApi(Api):
     options.pop('has_impersonation', None)
     options.pop('ssh_server_host', None)
 
+    url = url + self.user.username
     return create_engine(url, **options)
 
 
@@ -345,6 +346,12 @@ class SqlAlchemyApi(Api):
     engine = self._get_engine()
     inspector = inspect(engine)
 
+    url = self.options['url']
+    if url is not None:
+      schema = url[url.rindex('/') + 1:] + self.user.username
+    else:
+      schema = 'default'
+
     assist = Assist(inspector, engine, backticks=self.backticks)
     response = {'status': -1}
 
@@ -353,7 +360,8 @@ class SqlAlchemyApi(Api):
     elif operation == 'function':
       response['function'] = {}
     elif database is None:
-      response['databases'] = [db or '' for db in assist.get_databases()]
+      # response['databases'] = [db or '' for db in assist.get_databases()]
+      response['databases'] = [schema]
     elif table is None:
       tables_meta = []
       for t in assist.get_tables(database):
